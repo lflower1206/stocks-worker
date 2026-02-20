@@ -14,6 +14,7 @@ x-airflow-common:
     _AIRFLOW_WWW_USER_CREATE: 'true'
     _AIRFLOW_WWW_USER_USERNAME: airflow
     _AIRFLOW_WWW_USER_PASSWORD: airflow
+    _PIP_ADDITIONAL_REQUIREMENTS: "yfinance pymysql pydantic sqlalchemy"
   volumes:
     - ./etl/dags:/opt/airflow/dags
     - ./etl/logs:/opt/airflow/logs
