@@ -1,0 +1,6 @@
+yfinance
+sqlalchemy
+pymysql
+pandas
+apache-airflow
+pydantic
