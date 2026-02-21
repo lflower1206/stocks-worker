@@ -1,6 +1,6 @@
 from airflow import DAG
 from airflow.operators.bash import BashOperator
-from airflow.operators.dummy import DummyOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
 from datetime import datetime, timedelta
 import os
 
@@ -18,12 +18,12 @@ with DAG(
     'daily_stock_etl',
     default_args=default_args,
     description='A simple daily ETL DAG for US and TW stocks',
-    schedule_interval='0 10 * * *', # Adjust schedule based on market close timezone
+    schedule='0 10 * * *', # Adjust schedule based on market close timezone
     catchup=False,
     tags=['stocks'],
 ) as dag:
 
-    start = DummyOperator(task_id='start')
+    start = EmptyOperator(task_id='start')
 
     fetch_us = BashOperator(
         task_id='fetch_us_stocks',
@@ -51,6 +51,6 @@ with DAG(
         }
     )
 
-    end = DummyOperator(task_id='end')
+    end = EmptyOperator(task_id='end')
 
     start >> [fetch_us, fetch_tw] >> end
