@@ -1,3 +1,11 @@
+"""
+Fetch US Stocks (`fetch_us_stocks.py`)
+
+1. Query Active Symbols: Selects symbols from `tracked_symbols` where `market = 'US'` and `is_active = TRUE`.
+2. Fetch Data: Uses `yfinance.download()` with `period="1mo"`. (1 month lookback ensures missing or updated data from the recent past is seamlessly upserted).
+3. Transform & Validate: Converts pandas dataframe rows into list of dicts, validating each row via the Pydantic model.
+4. Load: Upserts the validated data to the `historical_prices` table.
+"""
 import sys
 import logging
 import yfinance as yf

@@ -1,3 +1,12 @@
+"""
+Fetch TW Stocks (`fetch_tw_stocks.py`)
+
+1. Query Active Symbols: Selects symbols from `tracked_symbols` where `market = 'TW'` and `is_active = TRUE`.
+2. Symbol Transformation: Modifies the symbol to include the `.TW` suffix if it doesn't end with `.TW` or `.TWO`, to be compatible with Yahoo Finance's ticker format for Taiwanese stocks (e.g., `2330` -> `2330.TW`).
+3. Fetch Data: Uses `yfinance.download()` with `period="1mo"`.
+4. Transform & Validate: Strips the `.TW` or `.TWO` suffix when storing back to the database. Validates records via Pydantic.
+5. Load: Upserts to the `historical_prices` table.
+"""
 import sys
 import logging
 import yfinance as yf

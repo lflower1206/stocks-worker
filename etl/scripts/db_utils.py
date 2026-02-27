@@ -1,3 +1,10 @@
+"""
+Database Utilities (`db_utils.py`)
+
+- Sets up the SQLAlchemy Engine.
+- Implements `upsert_historical_prices`, securely inserting data using MariaDB's 
+  `ON DUPLICATE KEY UPDATE` to avoid duplicate primary key errors if pipelines re-run.
+"""
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

@@ -1,3 +1,9 @@
+"""
+Models (`models.py`)
+
+Uses Pydantic (`DailyStockPrice` model) to strictly validate row data 
+(types, constraints like max_length for symbol) before insertion.
+"""
 from pydantic import BaseModel, ConfigDict, Field
 from datetime import date
 from typing import Literal
