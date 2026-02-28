@@ -4,6 +4,16 @@
 CREATE DATABASE IF NOT EXISTS stocks;
 USE stocks;
 
+-- Table to manage available pool of stocks
+CREATE TABLE IF NOT EXISTS stock_list (
+    symbol VARCHAR(20) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    market VARCHAR(10) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (symbol, market)
+);
+
 -- Table to manage symbols we are interested in tracking
 CREATE TABLE IF NOT EXISTS tracked_symbols (
     symbol VARCHAR(20) NOT NULL,

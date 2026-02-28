@@ -25,6 +25,19 @@ with DAG(
 
     start = EmptyOperator(task_id='start')
 
+    fetch_tickers = BashOperator(
+        task_id='fetch_stock_tickers',
+        bash_command='python /opt/airflow/scripts/fetch_stock_tickers.py',
+        env={
+            **os.environ,
+            "DB_USER": "airflow",
+            "DB_PASSWORD": "airflow",
+            "DB_HOST": "mariadb",
+            "DB_PORT": "3306",
+            "DB_NAME": "stocks"
+        }
+    )
+
     fetch_us = BashOperator(
         task_id='fetch_us_stocks',
         bash_command='python /opt/airflow/scripts/fetch_us_stocks.py',
@@ -53,4 +66,4 @@ with DAG(
 
     end = EmptyOperator(task_id='end')
 
-    start >> [fetch_us, fetch_tw] >> end
+    start >> fetch_tickers >> [fetch_us, fetch_tw] >> end

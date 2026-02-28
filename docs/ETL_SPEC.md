@@ -20,26 +20,32 @@ The Stocks Worker is a data pipeline application that fetches historical stock p
 graph TD
     subgraph Airflow Scheduler
         A(daily_stock_etl DAG)
-        A --> B[fetch_us_stocks.py]
-        A --> C[fetch_tw_stocks.py]
+        A --> Tickers[fetch_stock_tickers.py]
+        Tickers --> B[fetch_us_stocks.py]
+        Tickers --> C[fetch_tw_stocks.py]
     end
 
     subgraph Data Sources
+        Tickers -- "SEC/TWSE Open API" --> API[Public APIs]
         B -- "Downloads 1mo period" --> YF[Yahoo Finance API]
         C -- "Downloads 1mo period" --> YF
     end
 
     subgraph Python Processing
+        API -- "JSON List" --> T_Proc[Data Transform]
         YF -- "Raw Data" --> B_Proc[Data Transform & Pydantic Validation]
         YF -- "Raw Data" --> C_Proc[Data Transform & Pydantic Validation]
 
+        Tickers -.-> T_Proc
         B -.-> B_Proc
         C -.-> C_Proc
     end
 
     subgraph MariaDB
-        B_Proc -- "SQLAlchemy Upsert" --> DB[(stocks DB)]
+        T_Proc -- "SQLAlchemy Upsert" --> DB[(stocks DB)]
+        B_Proc -- "SQLAlchemy Upsert" --> DB
         C_Proc -- "SQLAlchemy Upsert" --> DB
+        DB -.-> S[stock_list]
         DB -.-> T[tracked_symbols]
         DB -.-> H[historical_prices]
     end
