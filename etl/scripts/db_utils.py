@@ -54,3 +54,27 @@ def upsert_historical_prices(session, prices_data):
     
     session.execute(on_duplicate_stmt)
     session.commit()
+
+def upsert_stock_list(session, stock_data):
+    """
+    Perform an UPSERT on the stock_list table.
+    expected format: list of dicts with symbol, name, market, is_active.
+    """
+    if not stock_data:
+        return
+
+    from sqlalchemy import Table, MetaData
+    metadata = MetaData()
+    stock_list = Table('stock_list', metadata, autoload_with=session.bind)
+
+    stmt = insert(stock_list).values(stock_data)
+
+    update_dict = {
+        'name': stmt.inserted.name,
+        'is_active': stmt.inserted.is_active,
+    }
+
+    on_duplicate_stmt = stmt.on_duplicate_key_update(update_dict)
+
+    session.execute(on_duplicate_stmt)
+    session.commit()
